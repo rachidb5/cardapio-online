@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start": "node build/index.js",
-    "dev": "ts-node-dev src/index.ts",
+    "dev": "ts-node-dev src/server.ts",
     "test": "jest",
     "swagger-autogen": "node swagger.js"
   },
@@ -25,7 +25,13 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.2.0",
+    "mongoose": "^7.0.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2"
   }

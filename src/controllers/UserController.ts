@@ -1,28 +1,17 @@
 import { Request, Response } from 'express'
-import { UserService } from '../services/UserService'
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 export class UserController {
-    userService: UserService
 
-    constructor(
-        userService = new UserService()
-    ){
-        this.userService = userService
+    login = async (request: Request, response: Response): Promise<Response<any, Record<string, any>>> => {
+        try {
+            const { userName, password } = request.body;
+            const newToken = await jwt.sign({ userName, password }, process.env.JWT_SECRET, { expiresIn: 8*60*60});
+            return response.status(200).json({ token: newToken });
+          } catch (e) {
+            console.log(e);
+            return response.status(400).json({ error: e });
+          }
     }
-
-    createUser = (request: Request, response: Response): Response => {
-        const user = request.body
-
-        if(!user.name){
-            return response.status(400).json({ message: 'Bad request! Name obrigatório'})
-        }
-
-        this.userService.createUser(user.name, user.email)
-        return response.status(201).json({ message: 'Usuário criado'})
-    }
-
-    getAllUsers = (request: Request, response: Response) => {
-        const users = this.userService.getAllUsers()
-        return response.status(200).json( users )
-    } 
 }

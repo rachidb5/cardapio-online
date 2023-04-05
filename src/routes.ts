@@ -1,14 +1,11 @@
-import { Router, Request, Response } from 'express'
-import { UserController } from './controllers/UserController'
+import express, { Request, Response, Express } from "express";
+import { UserController } from "./controllers/UserController";
+import { UserValidator } from "./middlewares/userMiddleware";
 
-export const router = Router()
+const router = express.Router();
+const userController = new UserController();
+const userValidator = new UserValidator();
 
-const userController = new UserController()
+router.post("/auth/login", userValidator.loginPasswordAuth, userController.login);
 
-router.post('/user', userController.createUser)
-router.get('/user', userController.getAllUsers)
-router.delete('/user', (request: Request, response: Response) => {
-    const user = request.body
-    console.log('Deletando usuário...', user)
-    return response.status(200).json({ message: 'Usuário deletado'})
-})
+export default router;
