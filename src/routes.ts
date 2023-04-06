@@ -16,4 +16,5 @@ const productController = new ProductController()
 router.post("/auth/login", userMiddleware.loginPasswordAuth, userController.login);
 router.get("/category", categoryController.getCategories);
 router.post("/product", productMiddleware.verifyCategory, productController.createProduct)
+router.get("/product", productController.getProducts)
 export default router;
