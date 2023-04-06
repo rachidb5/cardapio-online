@@ -1,7 +1,7 @@
 import User from "../models/UserModel";
 import { Request, Response, NextFunction } from "express";
 
-export class UserValidator {
+export class UserMiddleware {
   loginPasswordAuth = async (
     request: Request,
     response: Response,
