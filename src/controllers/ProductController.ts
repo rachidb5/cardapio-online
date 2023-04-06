@@ -106,7 +106,7 @@ export class ProductController {
       }
       await Product.findOneAndDelete({ _id: request.params.id });
       const products = await Product.find();      
-      return response.status(200).json({ message: "Productdeleted succesfully",...products });
+      return response.status(200).json({ message: "Product deleted succesfully",...products });
     } catch (e) {
       console.log(e);
       return response.status(400).json({ error: e });
