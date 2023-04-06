@@ -19,5 +19,6 @@ router.post("/product", productMiddleware.verifyCategory, productController.crea
 router.get("/product", productController.getProducts)
 router.get("/product/:id", productController.getProductById);
 router.delete("/product/:id", productController.deleteProduct);
+router.patch("/product/:id", productController.updateProduct);
 
 export default router;

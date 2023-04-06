@@ -100,13 +100,13 @@ export class ProductController {
           .json({ message: "Usuario não autenticado" });
       }
       const payload = jwt.verify(token, process.env.JWT_SECRET);
-      const product = await Product.findById(request.params.id);
+      let product = await Product.findById(request.params.id);
       if (product === null) {
         return response.status(404).json({ message: "Product not found" });
       }
-      await Product.findOneAndDelete({ _id: request.params.id });
-      const products = await Product.find();      
-      return response.status(200).json({ message: "Product deleted succesfully",...products });
+      await Product.findByIdAndUpdate(request.params.id, request.body);
+      product = await Product.findById(request.params.id);
+      return response.status(200).json({ message: "Product updated succesfully",...product });
     } catch (e) {
       console.log(e);
       return response.status(400).json({ error: e });
