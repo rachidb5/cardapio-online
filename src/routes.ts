@@ -18,4 +18,6 @@ router.get("/category", categoryController.getCategories);
 router.post("/product", productMiddleware.verifyCategory, productController.createProduct)
 router.get("/product", productController.getProducts)
 router.get("/product/:id", productController.getProductById);
+router.delete("/product/:id", productController.deleteProduct);
+
 export default router;
