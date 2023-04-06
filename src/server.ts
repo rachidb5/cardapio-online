@@ -1,6 +1,7 @@
 import app from './index'
 import mongoose from 'mongoose';
 import User from './models/UserModel';
+import Category from './models/CategoryModel';
 require('dotenv').config();
 const port = parseInt(process.env.PORT || '3000');
 
@@ -14,6 +15,31 @@ User.deleteMany({}).then(() => {
     password:"adm123"
   })
 });
+
+Category.deleteMany({}).then(() => {
+  Category.create([{
+    name:"Aperitivos e petiscos",
+    parent:null
+  },{
+    name:"Pratos Principais",
+    parent:null
+  },
+   {
+    name:"Massas",
+    parent:null
+  },
+   {
+    name:"Bebidas",
+    parent:null
+  },
+   {
+    name:"Sobremesas",
+    parent:null
+  },
+])
+}).then(() =>{
+
+})
 
 const server = new app().Start(port)
   .then((port: any) => console.log(`Server running on port ${port}`))
