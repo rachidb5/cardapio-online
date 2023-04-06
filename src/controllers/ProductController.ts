@@ -38,4 +38,28 @@ export class ProductController {
       return response.status(400).json({ error: e });
     }
   };
+
+  getProductById = async (
+    request: Request,
+    response: Response
+  ): Promise<Response<any, Record<string, any>>> => {
+    try {
+      const token = request.headers.authorization;
+      if (!token) {
+        return response
+          .status(401)
+          .json({ message: "Usuario não autenticado" });
+      }
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
+      const product = await Product.findById(request.params.id);
+      if(product === null) {
+
+          return response.status(404).json({ message: "Product not found"});
+      }
+      return response.status(200).json(product);
+    } catch (e) {
+      console.log(e);
+      return response.status(400).json({ error: e });
+    }
+  };
 }

@@ -17,4 +17,5 @@ router.post("/auth/login", userMiddleware.loginPasswordAuth, userController.logi
 router.get("/category", categoryController.getCategories);
 router.post("/product", productMiddleware.verifyCategory, productController.createProduct)
 router.get("/product", productController.getProducts)
+router.get("/product/:id", productController.getProductById);
 export default router;
