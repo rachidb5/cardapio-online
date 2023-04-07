@@ -4,21 +4,57 @@ import { UserMiddleware } from "./middlewares/userMiddleware";
 import { CategoryController } from "./controllers/CategoryController";
 import { ProductMiddleware } from "./middlewares/productMiddleware";
 import { ProductController } from "./controllers/ProductController";
-
+import { TokenVerification } from "./middlewares/tokenVerification";
 
 const router = express.Router();
 const userController = new UserController();
 const userMiddleware = new UserMiddleware();
-const categoryController = new CategoryController()
-const productMiddleware = new ProductMiddleware()
-const productController = new ProductController()
+const categoryController = new CategoryController();
+const productMiddleware = new ProductMiddleware();
+const productController = new ProductController();
+const tokenVerification = new TokenVerification();
 
-router.post("/auth/login", userMiddleware.loginPasswordAuth, userController.login);
-router.get("/category", categoryController.getCategories);
-router.post("/product", productMiddleware.verifyCategory, productController.createProduct)
-router.get("/product", productController.getProducts)
-router.get("/product/:id", productController.getProductById);
-router.delete("/product/:id", productController.deleteProduct);
-router.patch("/product/:id", productController.updateProduct);
+// Rota de Login
+router.post(
+  "/auth/login",
+  userMiddleware.loginPasswordAuth,
+  userController.login
+);
+
+// Rota de lista de categoria
+router.get(
+  "/category",
+  tokenVerification.verifyToken,
+  categoryController.getCategories
+);
+
+//Rotas de produto
+router.post(
+  "/product",
+  tokenVerification.verifyToken,
+  productMiddleware.verifyCategory,
+  productController.createProduct
+);
+router.get(
+  "/product",
+  tokenVerification.verifyToken,
+  productController.getProducts
+);
+router.get(
+  "/product/:id",
+  tokenVerification.verifyToken,
+  productController.getProductById
+);
+router.delete(
+  "/product/:id",
+  tokenVerification.verifyToken,
+  productController.deleteProduct
+);
+router.patch(
+  "/product/:id",
+  tokenVerification.verifyToken,
+  productMiddleware.verifyCategory,
+  productController.updateProduct
+);
 
 export default router;

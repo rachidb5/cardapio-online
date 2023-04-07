@@ -1,11 +1,5 @@
 import{ Schema, model, Types } from 'mongoose';
-
-type Nullable<T> = T | null;
-
-export interface ICategory {
-    name: string;
-    parent: Nullable<ICategory>;
-}
+import { ICategory } from '../types/Interfaces';
 
 const categorySchema = new Schema<ICategory>({
     name: { type: String , required: true},

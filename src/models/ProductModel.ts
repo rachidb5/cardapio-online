@@ -1,12 +1,5 @@
 import{ Schema, model, Types } from 'mongoose';
-import { ICategory } from './CategoryModel';
-
-interface IProduct {
-    name: string;
-    categories: ICategory[];
-    qty: number;
-    price: number;
-}
+import { IProduct } from '../types/Interfaces';
 
 const productSchema = new Schema<IProduct>({
     name: { type: String , required: true},
