@@ -9,12 +9,11 @@ export class TokenVerification {
     next: NextFunction
   ): Promise<any> => {
     try{
-
       const token = request.headers.authorization;
       if (!token) {
         return response
         .status(401)
-        .json({ message: "Usuario não autenticado" });
+        .json({ message: "Unauthorized user" });
       }
       const payload = jwt.verify(token, process.env.JWT_SECRET);
     } catch (e) {

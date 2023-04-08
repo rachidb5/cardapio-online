@@ -14,7 +14,7 @@ export class UserMiddleware {
     if (usersNames.length < 1 || usersNames[0].password !== password) {
       return response
         .status(401)
-        .json({ message: "Usuario ou senha incorretos" });
+        .json({ message: "Invalid user or password." });
     }
     next();
   };
