@@ -1,5 +1,6 @@
 import Category from "../models/CategoryModel";
 import { Request, Response, NextFunction } from "express";
+import Product from "../models/ProductModel";
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -10,7 +11,6 @@ export class ProductMiddleware {
     next: NextFunction
   ): Promise<any> => {
     try{
-
       const token = request.headers.authorization;
       if (!token) {
         return response
@@ -32,4 +32,23 @@ export class ProductMiddleware {
     }
     next();
   };
+
+  productSearch = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try{
+      const product = await Product.findById(request.params.id);
+      if (product === null) {
+        return response.status(404).json({ message: "Product not found" });
+      }
+    } catch (e) {
+      console.log(e);
+      return response.status(400).json({ error: e });
+    }
+    next();
+  };
+
+
 }

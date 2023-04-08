@@ -37,9 +37,6 @@ export class ProductController {
   ): Promise<Response<any, Record<string, any>>> => {
     try {
       const product = await Product.findById(request.params.id);
-      if (product === null) {
-        return response.status(404).json({ message: "Product not found" });
-      }
       return response.status(200).json(product);
     } catch (e) {
       console.log(e);
@@ -52,15 +49,11 @@ export class ProductController {
     response: Response
   ): Promise<Response<any, Record<string, any>>> => {
     try {
-      const product = await Product.findById(request.params.id);
-      if (product === null) {
-        return response.status(404).json({ message: "Product not found" });
-      }
       await Product.findOneAndDelete({ _id: request.params.id });
       const products = await Product.find();
       return response
         .status(200)
-        .json({ message: "Productdeleted succesfully", ...products });
+        .json({ message: "Product deleted succesfully", ...products });
     } catch (e) {
       console.log(e);
       return response.status(400).json({ error: e });
@@ -73,9 +66,6 @@ export class ProductController {
   ): Promise<Response<any, Record<string, any>>> => {
     try {
       let product = await Product.findById(request.params.id);
-      if (product === null) {
-        return response.status(404).json({ message: "Product not found" });
-      }
       await Product.findByIdAndUpdate(request.params.id, request.body);
       product = await Product.findById(request.params.id);
       return response

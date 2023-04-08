@@ -43,16 +43,19 @@ router.get(
 router.get(
   "/product/:id",
   tokenVerification.verifyToken,
+  productMiddleware.productSearch,
   productController.getProductById
 );
 router.delete(
   "/product/:id",
   tokenVerification.verifyToken,
+  productMiddleware.productSearch,
   productController.deleteProduct
 );
 router.patch(
   "/product/:id",
   tokenVerification.verifyToken,
+  productMiddleware.productSearch,
   productMiddleware.verifyCategory,
   productController.updateProduct
 );
