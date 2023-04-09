@@ -57,6 +57,7 @@ router.patch(
   "/product/:id",
   tokenVerification.verifyToken,
   productMiddleware.productSearch,
+  productMiddleware.productValidation,
   productMiddleware.verifyCategory,
   productController.updateProduct
 );

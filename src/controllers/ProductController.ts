@@ -70,7 +70,7 @@ export class ProductController {
       await Product.findByIdAndUpdate(request.params.id, body);
       product = await Product.findById(request.params.id);
       return response
-        .status(200)
+        .status(201)
         .json({ message: "Product updated succesfully", ...product });
     } catch (e) {
       console.log(e);

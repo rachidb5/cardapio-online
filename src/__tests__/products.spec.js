@@ -121,7 +121,10 @@ describe("Endpoint para cadastro de produtos", () => {
             price: 119.9,
             categories: [categoryString],
           })
-          .expect("status", 201);
+          .expect("status", 201).then((response) => {
+            const { json } = response;
+            expect(json.name).toBe("pão de alho");
+          });
       });
   });
   it("Será validado que não é possivel cadastrar produtos sem preço", async () => {
@@ -252,8 +255,8 @@ describe("Endpoint para visualização de produtos", () => {
 describe("Endpoint para visualização de produto por id", () => {
   let connection;
   let db;
-  let categories;
-  let categoryString;
+  let products;
+  let productString;
 
   beforeAll(async () => {
     connection = await MongoClient.connect(
@@ -268,7 +271,7 @@ describe("Endpoint para visualização de produto por id", () => {
 
   beforeEach(async () => {
     products = await db.collection("products").find().toArray();
-    productString = products[products.length-1]._id.toString();
+    productString = products[products.length - 1]._id.toString();
   });
 
   afterAll(async () => {
@@ -328,4 +331,306 @@ describe("Endpoint para visualização de produto por id", () => {
           });
       });
   });
+});
+
+describe("Endpoint para editar de produto", () => {
+  let connection;
+  let db;
+  let products;
+  let productString;
+  let categories;
+  let categoryString;
+
+  beforeAll(async () => {
+    connection = await MongoClient.connect(
+      `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+    db = await connection.db();
+  });
+
+  beforeEach(async () => {
+    products = await db.collection("products").find().toArray();
+    productString = products[products.length - 1]._id.toString();
+    categories = await db.collection("categories").find().toArray();
+    categoryString = categories[0]._id.toString();
+  });
+
+  afterAll(async () => {
+    await connection.close();
+  });
+
+  it("Será validado que é impossivel listar editar um produto sem o usuario validado", async () => {
+    await frisby
+      .patch(`${url}/product/${productString}`, {
+        name: "pão de queijo",
+        qty: 11,
+        price: 102.9,
+        categories: [categoryString],
+      })
+      .expect("status", 401)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        expect(result.message).toBe("Unauthorized user");
+      });
+  });
+
+  it("Será validado que é impossivel editar produto com token invalido", async () => {
+    await frisby
+      .setup({
+        request: {
+          headers: {
+            Authorization: "asddasasdasdasdacacac",
+            "Content-Type": "application/json",
+          },
+        },
+      })
+      .patch(`${url}/product/${productString}`, {
+        name: "pão de queijo",
+        qty: 11,
+        price: 102.9,
+        categories: [categoryString],
+      })
+      .expect("status", 400)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        expect(result.error.message).toBe("jwt malformed");
+      });
+  });
+ 
+  it("Será validado que é possivel editarum produto com o usuario validado", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "pão de queijo",
+            qty: 11,
+            price: 102.9,
+            categories: [categoryString],
+          })
+          .expect("status", 201)
+          .then((response) => {
+            const result = JSON.parse(response.body);
+            expect(result.message).toBe("Product updated succesfully");
+            expect(result._doc.name).toBe("pão de queijo");
+          });
+      });
+  });
+ 
+  it("Será validado que não é possivel editar um produto sem nome", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "",
+            qty: 11,
+            price: 102.9,
+            categories: [categoryString],
+          })
+          .expect("status", 400)
+      });
+  });
+
+  it("Será validado que não é possivel editar um produto sem quantidade", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "",
+            qty: "",
+            price: 102.9,
+            categories: [categoryString],
+          })
+          .expect("status", 400)
+      });
+  });
+
+  it("Será validado que não é possivel editar um produto sem preço", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "",
+            qty: 9,
+            price: 112.9,
+            categories: [categoryString],
+          })
+          .expect("status", 400)
+      });
+  });
+
+  it("Será validado que não é possivel editar um produto sem categoria cadastrada", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "",
+            qty: 9,
+            price: 112.9,
+            categories: ["dfsdfsdf"],
+          })
+          .expect("status", 400)
+          .then((response) => {
+            const { body } = response;
+            const result = JSON.parse(body);
+            expect(result.message).toBe(
+              "Invalid Entries."
+            );
+          });
+      });
+  });
+ 
+  it("Será validado que não é possivel editar um produto sem categoria", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "",
+            qty: 9,
+            price: 112.9,
+            categories: [],
+          })
+          .expect("status", 400)
+          .then((response) => {
+            const { body } = response;
+            const result = JSON.parse(body);
+            console.log(result)
+            expect(result.message).toBe(
+              "Invalid Entries."
+            );
+          });
+      });
+  });
+
+  /*it("Será validado que não é possivel editar um produto inexistente", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .patch(`${url}/product/${productString}`, {
+            name: "",
+            qty: 9,
+            price: 112.9,
+            categories: [],
+          })
+          .expect("status", 400)
+          .then((response) => {
+            const { body } = response;
+            const result = JSON.parse(body);
+            console.log(result)
+            expect(result.message).toBe(
+              "Invalid Entries."
+            );
+          });
+      });
+  });*/
 });
