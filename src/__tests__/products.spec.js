@@ -10,8 +10,7 @@ describe("Endpoint para cadastro de produtos", () => {
   let categoryString;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(
-      `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`,
+    connection = await MongoClient.connect(process.env.DB_CONN || '',
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -302,7 +301,7 @@ describe("Endpoint para visualização de produto por id", () => {
       .get(`${url}/product/${productString}`)
       .expect("status", 400);
   });
-  it("Será validado que é possivel listar as categorias com o usuario validado", async () => {
+  it("Será validado que é possivel listar os produtos com o usuario validado", async () => {
     await frisby
       .post(`${url}/auth/login/`, {
         userName: "admin",
@@ -597,7 +596,7 @@ describe("Endpoint para editar de produto", () => {
       });
   });
 
-  /*it("Será validado que não é possivel editar um produto inexistente", async () => {
+  it("Será validado que não é possivel editar um produto inexistente", async () => {
     await frisby
       .post(`${url}/auth/login/`, {
         userName: "admin",
@@ -616,21 +615,100 @@ describe("Endpoint para editar de produto", () => {
               },
             },
           })
-          .patch(`${url}/product/${productString}`, {
-            name: "",
+          .patch(`${url}/product/asdasd`, {
+            name: "pão de frutas",
             qty: 9,
             price: 112.9,
             categories: [],
           })
-          .expect("status", 400)
+          .expect("status", 404)
           .then((response) => {
             const { body } = response;
             const result = JSON.parse(body);
             console.log(result)
             expect(result.message).toBe(
-              "Invalid Entries."
+              "Product not found"
             );
           });
       });
-  });*/
+  });
+});
+
+describe("Endpoint para visualização de produto por id", () => {
+  let connection;
+  let db;
+  let products;
+  let productString;
+
+  beforeAll(async () => {
+    connection = await MongoClient.connect(
+      `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+    db = await connection.db();
+  });
+
+  beforeEach(async () => {
+    products = await db.collection("products").find().toArray();
+    productString = products[products.length - 1]._id.toString();
+  });
+
+  afterAll(async () => {
+    await connection.close();
+  });
+
+  it("Será validado que é impossivel listar deletar um produto sem o usuario validado", async () => {
+    await frisby
+      .delete(`${url}/product/${productString}`)
+      .expect("status", 401)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        expect(result.message).toBe("Unauthorized user");
+      });
+  });
+
+  it("Será validado que é impossivel deletar produto com token invalido", async () => {
+    await frisby
+      .setup({
+        request: {
+          headers: {
+            Authorization: "asddasasdasdasdacacac",
+            "Content-Type": "application/json",
+          },
+        },
+      })
+      .delete(`${url}/product/${productString}`)
+      .expect("status", 400);
+  });
+  it("Será validado que é possivel deletar o produto com o usuario validado", async () => {
+    await frisby
+      .post(`${url}/auth/login/`, {
+        userName: "admin",
+        password: "adm123",
+      })
+      .expect("status", 200)
+      .then((response) => {
+        const { body } = response;
+        const result = JSON.parse(body);
+        return frisby
+          .setup({
+            request: {
+              headers: {
+                Authorization: result.token,
+                "Content-Type": "application/json",
+              },
+            },
+          })
+          .delete(`${url}/product/${productString}`)
+          .expect("status", 200)
+          .then((response) => {
+            const result = JSON.parse(response.body);
+            expect(result.message).toBe("Product deleted succesfully");
+          });
+      });
+  });
 });

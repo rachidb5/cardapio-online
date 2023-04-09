@@ -45,7 +45,7 @@ export class ProductMiddleware {
       }
     } catch (e) {
       console.log(e);
-      return response.status(400).json({ error: e });
+      return response.status(404).json({ message: "Product not found" });
     }
     next();
   };

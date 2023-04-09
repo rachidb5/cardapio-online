@@ -1,31 +1,26 @@
-import express from 'express'
-import swaggerUi from 'swagger-ui-express'
-import * as swaggerDocument from './swagger.json'
-import * as bodyParser from 'body-parser'
-import router from './routes'
+import app from "./server";
+import mongoose from "mongoose";
+import { categoryStart, userStart } from "./services/dbStarter";
+require("dotenv").config();
+const port = parseInt(process.env.PORT || "3000");
 
-class App {
-  private server: any
+mongoose
+  .connect(process.env.DB_CONN || '')
+  .then(() => {
+    console.log("conectado");
+    userStart();
+    categoryStart();
+  })
+  .catch((e: string) => {
+    console.log("algo deu errado erro: " + e);
+  });
 
-  constructor() {
-    this.server = express()
-    this.server.use(bodyParser.urlencoded({ extended: true }));
-    this.server.use(bodyParser.json());
-    this.server.use(router)
-    this.server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));     
-  }
+const server = new app()
+  .Start(port)
+  .then((port: any) => console.log(`Server running on port ${port}`))
+  .catch((error: any) => {
+    console.log(error);
+    process.exit(1);
+  });
 
-  public Start = (port: number) => {
-    return new Promise((resolve, reject) => {
-
-      this.server.listen(
-        port,
-        () => {
-          resolve(port)
-        })
-        .on('error', (err: object) => reject(err));
-    })
-  }
-}
-
-export default App;
+export default server;

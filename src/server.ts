@@ -1,28 +1,31 @@
-import app from "./index";
-import mongoose from "mongoose";
-import { categoryStart, userStart } from "./services/dbStarter";
-require("dotenv").config();
-const port = parseInt(process.env.PORT || "3000");
+import express from 'express'
+import swaggerUi from 'swagger-ui-express'
+import * as swaggerDocument from './swagger.json'
+import * as bodyParser from 'body-parser'
+import router from './routes'
 
-mongoose
-  .connect(
-    `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`
-  )
-  .then(() => {
-    console.log("conectado");
-    userStart();
-    categoryStart();
-  })
-  .catch((e: string) => {
-    console.log("algo deu errado erro: " + e);
-  });
+class App {
+  private server: any
 
-const server = new app()
-  .Start(port)
-  .then((port: any) => console.log(`Server running on port ${port}`))
-  .catch((error: any) => {
-    console.log(error);
-    process.exit(1);
-  });
+  constructor() {
+    this.server = express()
+    this.server.use(bodyParser.urlencoded({ extended: true }));
+    this.server.use(bodyParser.json());
+    this.server.use(router)
+    this.server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));     
+  }
 
-export default server;
+  public Start = (port: number) => {
+    return new Promise((resolve, reject) => {
+
+      this.server.listen(
+        port,
+        () => {
+          resolve(port)
+        })
+        .on('error', (err: object) => reject(err));
+    })
+  }
+}
+
+export default App;
