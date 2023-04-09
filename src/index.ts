@@ -2,7 +2,7 @@ import app from "./server";
 import mongoose from "mongoose";
 import { categoryStart, userStart } from "./seeder/dbStarter";
 require("dotenv").config();
-const port = parseInt(process.env.PORT || "3000");
+const port = parseInt(process.env.PORT || "8080");
 
 mongoose
   .connect(process.env.DB_CONN || '')
