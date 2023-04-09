@@ -588,7 +588,6 @@ describe("Endpoint para editar de produto", () => {
           .then((response) => {
             const { body } = response;
             const result = JSON.parse(body);
-            console.log(result)
             expect(result.message).toBe(
               "Invalid Entries."
             );
@@ -625,7 +624,6 @@ describe("Endpoint para editar de produto", () => {
           .then((response) => {
             const { body } = response;
             const result = JSON.parse(body);
-            console.log(result)
             expect(result.message).toBe(
               "Product not found"
             );
