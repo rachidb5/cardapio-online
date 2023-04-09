@@ -66,7 +66,8 @@ export class ProductController {
   ): Promise<Response<any, Record<string, any>>> => {
     try {
       let product = await Product.findById(request.params.id);
-      await Product.findByIdAndUpdate(request.params.id, request.body);
+      let { body } = request
+      await Product.findByIdAndUpdate(request.params.id, body);
       product = await Product.findById(request.params.id);
       return response
         .status(200)

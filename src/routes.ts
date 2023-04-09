@@ -32,6 +32,7 @@ router.get(
 router.post(
   "/product",
   tokenVerification.verifyToken,
+  productMiddleware.productValidation,
   productMiddleware.verifyCategory,
   productController.createProduct
 );

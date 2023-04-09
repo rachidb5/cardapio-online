@@ -4,6 +4,7 @@ require("dotenv").config();
 const url = "http://localhost:3000";
 
 describe("Endpoint para visualização de categorias", () => {
+  
   it("Será validado que é impossivel listar as categorias sem o usuario validado", async () => {
     await frisby
       .get(`${url}/category`)
@@ -15,18 +16,18 @@ describe("Endpoint para visualização de categorias", () => {
       });
   });
 
-  it("Será validado que é impossivel listar as categorias sem o usuario validado", async () => {
+  it("Será validado que é impossivel listar as categorias com token invalido", async () => {
     await frisby
-          .setup({
-            request: {
-              headers: {
-                Authorization: "asddasasdasdasdacacac",
-                "Content-Type": "application/json",
-              },
-            },
-          })
-          .get(`${url}/category`)
-          .expect("status", 400)
+      .setup({
+        request: {
+          headers: {
+            Authorization: "asddasasdasdasdacacac",
+            "Content-Type": "application/json",
+          },
+        },
+      })
+      .get(`${url}/category`)
+      .expect("status", 400);
   });
   it("Será validado que é possivel listar as categorias com o usuario validado", async () => {
     await frisby
@@ -50,7 +51,6 @@ describe("Endpoint para visualização de categorias", () => {
           .get(`${url}/category`)
           .expect("status", 200)
           .then((response) => {
-            console.log(response.body);
             const result = JSON.parse(response.body);
             expect(result[0].name).toBe("Entradas e Aperitivos");
             expect(result[0].parent).toBe(null);

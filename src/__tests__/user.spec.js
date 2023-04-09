@@ -4,6 +4,7 @@ require("dotenv").config();
 const url = "http://localhost:3000";
 
 describe("1 - Endpoint para login e autenticação do usuario", () => {
+
   it("Será validado que é impossivel efetuar o login com senha incorreta", async () => {
     await frisby
       .post(`${url}/auth/login/`, {

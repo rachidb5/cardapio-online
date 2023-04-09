@@ -49,6 +49,30 @@ export class ProductMiddleware {
     }
     next();
   };
-
+  productValidation = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try{
+      let { body } = request
+      if(body.name === '' || body.name === undefined || body.name === null){
+        return response.status(400).json({ message: "Invalid Entries." });
+      }
+      if(body.price === '' || body.price === undefined || body.price === null){
+        return response.status(400).json({ message: "Invalid Entries." });
+      }
+      if(body.qty === '' || body.qty === undefined || body.qty === null){
+        return response.status(400).json({ message: "Invalid Entries." });
+      }
+      if(body.categories.length === 0 || body.categories === undefined || body.categories === null){
+        return response.status(400).json({ message: "Invalid Entries." });
+      }
+    } catch (e) {
+      console.log(e);
+      return response.status(400).json({ error: e });
+    }
+    next();
+  };
 
 }
