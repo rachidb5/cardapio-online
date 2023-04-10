@@ -1,32 +1,69 @@
-# Desenvolvendo o Dio Bank
-desenvolvido por [Nathally Souza](https://github.com/nathyts)
+# Cardapio-api
 
-#### Projeto desenvolvido com conceitos básicos de typescript
+Bem vindo à API de cardapio online. A seguir, uma apresentação do projeto com orientações e apresentações das ferramentas.
 
-### Tecnologias
-- Typescript
 
-### Como rodar o projeto
+## Como executar localmente
+Primeiro, vamos baixar o projeto. Execute o comando abaixo na pasta onde você deseja fazer o download.
 
-1 - Clone o repositório
+Execute o comando a seguir na pasta em que vicê deseja salvar o projeto
 
-2 - Instale as dependeências
-    
-    npm install
+```
+git clone https://github.com/rachidb5/cardapio-online.git
+```
 
-3 - Execute o projeto
+Depois entraremos na pasta do projteo
 
-    npm run dev
+```bash
+cd cardapio-online
+```
 
-#### Desafios
-[ ] Incluir os testes unitários pendentes no controller
-  - Verificar a resposta de erro caso o usuário não informe o name
-  - Verificar se a função getAllusers está sendo chamada
+Antes de instalar as dependencias e iniciar o projeto, temos que definir duas variaveis de ambiente.
 
-[ ] Implementa uma validação para o campo email
-  - O usuário nâo pode ser criado caso não informe o email
-  - Escreva o teste unitário
+Na pasta raiz do projeto, crie um arquivo chamado ```.env```.
 
-[ ] Refatorar e implementar a rota para deletar o usuário
-  - Refatore a rota para deletar usuários
-  - Escreva os testes unitários necessários
+Dentro desse arquivo.
+
+```
+DB_CONN=***string de conexão com o banco de dados mongodb***
+JWT_SECRET=***você escolhe chave secreta para geração do token de autenticação***
+```
+
+Então, instalamos as dependencias
+
+```bash
+npm install
+```
+
+Iniciando o projeto
+
+```bash
+npm run build
+```
+
+E depois
+
+```bash
+npm start
+```
+OU
+
+
+Se quiser executar o ambiente de desenvolvimento
+
+```
+npm run dev
+```
+
+Agora, a API estará disponivel em:
+
+```
+http://localhost:8080
+```
+
+## Endpoints
+
+
+## Deploy
+
+Também é possivel acessar o projeto aqui: [Aqui](https://cardapio-app.fly.dev/swagger/)
