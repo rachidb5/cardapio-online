@@ -1,7 +1,7 @@
 const frisby = require("frisby");
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
-const url = "http://localhost:3000";
+const url = "http://localhost:8080";
 
 describe("Endpoint para cadastro de produtos", () => {
   let connection;
