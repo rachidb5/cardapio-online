@@ -83,6 +83,7 @@ Disponivel em:
 ```
 http://localhost:8080/auth/login
 ```
+
 | Método | Descrição |
 |---|---| |
 | `POST` | Utilizado para autenticar o usuario |
@@ -264,7 +265,7 @@ exemplo de resposta:
     ]
   }]
 ```
-#### Lista de produtos (POST)
+#### Cadastro de produtos (POST)
 
 | Código | Descrição |
 |---|---|
