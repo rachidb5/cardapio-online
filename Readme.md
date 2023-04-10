@@ -359,3 +359,45 @@ No body da requisição:
 ## Deploy
 
 Também é possivel acessar o projeto aqui: [Aqui](https://cardapio-app.fly.dev/swagger/)
+
+## Comentarios sobre bibliotecas utilizadas
+
+* Express
+
+  Framework do node utilizada para criar servidores. Entrega recursos para criação de rotas e construir uma aplicação com a arquitetura REST. É a lib que baseia toda aplicação.
+
+* mongodb
+
+  Biblioteca do banco de dados foi utilizada para criar queries e manipular o banco de dados tanto na aplicação quanto nos testes.
+
+* mongoose
+
+  Biblioteca que foi usada para conectar a aplicação ao banco de dados.
+
+* jsonwebtoken
+
+  É uma biblioteca usada para criar assinaturas e criptografia com json. Aqui, alib serve para criptografar e gerar um token do usuario autenticado.
+
+* dotenv
+
+  Biblioteca para utilizaçao de variaveis de ambiente. nesse app, as váriaveis de ambiente são informações que não podem ser públicas. Aqui, é a chave secreta do jsonwebtoken e a string de conexão com o banco de dados mongodb.
+
+* swagger-ui-express e swagger-jsdoc
+
+  Foram as bibliotecas usadas para criar o swagger com os detalhes dos endpoints.
+
+* cors 
+
+  Biblioteca que foi usada para garantir que a API possa ser acessada de todas as origens.
+
+* jest
+
+Biblioteca de testes do node. Foi o recurso usado para criar e estruturas os testes da aplicação.
+
+* frisby
+
+Foi a biblioteca usada em conjunto com o jest. O frisby foi responsável por acessar os endpoints durante os testes.
+
+## Considerações finais
+
+Muito obrigado por dedicar um tempo para ver meu trabalho, espero que cause uma boa impressão e consiga expressar todo o meu talento e potencial.
