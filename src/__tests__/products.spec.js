@@ -259,7 +259,7 @@ describe("Endpoint para visualização de produto por id", () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(
-      `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`,
+      process.env.DB_CONN,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -342,7 +342,7 @@ describe("Endpoint para editar de produto", () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(
-      `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`,
+      process.env.DB_CONN,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -640,7 +640,7 @@ describe("Endpoint para visualização de produto por id", () => {
 
   beforeAll(async () => {
     connection = await MongoClient.connect(
-      `mongodb+srv://jordanrachid:${process.env.DB_PWD}@cluster0.tc6clya.mongodb.net/?retryWrites=true&w=majority`,
+      process.env.DB_CONN,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

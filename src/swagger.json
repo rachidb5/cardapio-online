@@ -8,7 +8,7 @@
             "email": "jordan.rachid@gmail.com"
         }
     },
-    "host": "localhost:3000",
+    "host": "localhost:8080",
     "basePath": "/",
     "schemes": [
         "http"

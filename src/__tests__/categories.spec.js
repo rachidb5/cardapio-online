@@ -1,7 +1,7 @@
 const frisby = require("frisby");
 require("dotenv").config();
 
-const url = "http://localhost:3000";
+const url = "http://localhost:8080";
 
 describe("Endpoint para visualização de categorias", () => {
   
