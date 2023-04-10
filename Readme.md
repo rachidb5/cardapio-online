@@ -85,7 +85,7 @@ http://localhost:8080/auth/login
 ```
 
 | Método | Descrição |
-|---|---| |
+|---|---|
 | `POST` | Utilizado para autenticar o usuario |
 
 No body da requisição:
